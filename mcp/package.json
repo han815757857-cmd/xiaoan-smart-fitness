@@ -1,0 +1,18 @@
+{
+  "name": "xiaoan-smart-fitness-mcp",
+  "version": "0.2.0-test",
+  "private": true,
+  "type": "module",
+  "description": "小安智能健身官方 MCP 服务骨架：查询服务、创建预约、查询预约。",
+  "scripts": {
+    "start": "node src/server.mjs",
+    "start:http": "node src/httpServer.mjs",
+    "smoke:test": "node scripts/smoke-test.mjs",
+    "m3-5:test": "node scripts/m3-5-test.mjs",
+    "http:test": "node scripts/http-test.mjs",
+    "feishu:openapi:test": "node scripts/feishu-openapi-test.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

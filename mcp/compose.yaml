@@ -1,0 +1,16 @@
+services:
+  xiaoan-mcp:
+    build: .
+    container_name: xiaoan-smart-fitness-mcp
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      HOST: 0.0.0.0
+      PORT: 3000
+    ports:
+      - "127.0.0.1:3000:3000"
+    volumes:
+      - xiaoan-data:/app/data
+
+volumes:
+  xiaoan-data:
