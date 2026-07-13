@@ -8,6 +8,17 @@
 
 首版商品为“1 对 1 健身私教训练”，200 元 / 60 分钟，测试阶段到店支付。订单写入商家授权的飞书多维表格。
 
+## 个人 Agent 授权
+
+在 Agent 所在设备上，由商家通过标准输入将 MCP Token 传给配置脚本。脚本不接受命令行参数，避免 Token 落入 shell 历史：
+
+```bash
+sed -n 's/^MCP_AUTH_TOKEN=//p' ~/xiaoan-smart-fitness/mcp/.env | node ~/xiaoan-smart-fitness/scripts/configure-auth.js
+node ~/xiaoan-smart-fitness/scripts/mcp-client.js list
+```
+
+授权保存在当前用户的 `~/.xiaoan/mcp-auth.json`，文件权限为 `600`；不得提交到 GitHub。
+
 ## 安全边界
 
 - MCP 不收集银行卡信息，也不代替支付。
