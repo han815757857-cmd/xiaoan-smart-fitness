@@ -8,7 +8,12 @@ const root = join(__dirname, "..");
 
 const child = spawn("node", ["src/server.mjs"], {
   cwd: root,
-  stdio: ["pipe", "pipe", "pipe"]
+  stdio: ["pipe", "pipe", "pipe"],
+  env: {
+    ...process.env,
+    XIAOAN_STORE: process.env.XIAOAN_STORE || "local",
+    XIAOAN_ALLOW_MOCK: process.env.XIAOAN_STORE === "feishu" ? "false" : "true"
+  }
 });
 
 child.stderr.on("data", (chunk) => {

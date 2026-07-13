@@ -1,16 +1,16 @@
 # 小安智能健身官方 MCP
 
 > 阶段：M3.6
-> 状态：stdio 与 Streamable HTTP 两种入口均已通过本地验收；等待取得稳定 HTTPS 公网地址。
-> 存储：默认本地测试；设置 `XIAOAN_STORE=feishu` 后读写飞书订单台账。
+> 公网入口：`https://xiaoan.39-108-49-182.sslip.io/mcp`
+> 存储：生产必须显式设置 `XIAOAN_STORE=feishu`；未配置时拒绝创建或查询订单。
 
 ## 当前工具
 
 | 工具 | 作用 | 当前实现 |
 |---|---|---|
 | `list_services` | 查询可预约服务 | 返回 `1 对 1 健身私教训练` |
-| `create_booking` | 创建预约订单 | 默认写入本地 `data/local-bookings.json`；设置 `XIAOAN_STORE=feishu` 后写入飞书 |
-| `get_booking` | 查询预约状态 | 默认查本地 mock；设置 `XIAOAN_STORE=feishu` 后查飞书 |
+| `create_booking` | 创建预约订单 | 生产写入飞书；未配置时明确失败 |
+| `get_booking` | 查询预约状态 | 生产查询飞书；未配置时明确失败 |
 
 ## 本地启动
 
@@ -37,6 +37,18 @@ MCP_AUTH_TOKEN=请替换为长随机密钥 npm run start:http
 
 ```bash
 npm run smoke:test
+```
+
+上述测试脚本会显式开启本地 mock。手工启动服务时，只有同时设置下列两项才允许 mock：
+
+```bash
+XIAOAN_STORE=local XIAOAN_ALLOW_MOCK=true npm start
+```
+
+未配置订单存储时必须拒绝创建订单，用下列回归测试验证：
+
+```bash
+npm run store:safety:test
 ```
 
 HTTP 传输层验收：
@@ -118,7 +130,7 @@ XIAOAN_STORE=feishu npm run m3-5:test
 - 这一版是 MCP 服务骨架，不直接收集银行卡，也不代替支付。
 - 测试阶段付款方式仍是“到店支付”。
 - 金额字段在业务侧统一记为 `金额（元）=200`。
-- 当前支持本地 mock 和飞书两种存储模式；MVP 验收时使用飞书模式。
+- 本地 mock 仅用于显式的开发测试，不得对用户表述为真实预约。
 - HTTP 入口按 MCP Streamable HTTP 的单一 `/mcp` 端点设计；首版不启用服务端 SSE 推送。
 - 已加入 Origin 校验、1 MB 请求体限制和可选 Bearer Token。公网部署时 `MCP_AUTH_TOKEN` 必须设置。
 - 云端飞书模式使用专用应用的 `tenant_access_token`；应用密钥必须只保存在服务器环境变量中，不得写进 GitHub、日志或 MCP 返回值。

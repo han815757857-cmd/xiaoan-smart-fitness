@@ -8,7 +8,7 @@ const LOG_PATH = join(__dirname, "..", "data", "call-logs.jsonl");
 function safeArguments(toolName, args = {}) {
   const base = {
     tool: toolName,
-    store: process.env.XIAOAN_STORE === "feishu" ? "feishu" : "local"
+    store: process.env.XIAOAN_STORE || "unconfigured"
   };
 
   if (toolName === "create_booking") {

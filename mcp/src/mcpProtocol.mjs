@@ -7,7 +7,7 @@ export const SUPPORTED_PROTOCOL_VERSIONS = ["2025-11-25", "2025-06-18"];
 export const SERVER_INFO = {
   name: "xiaoan-smart-fitness-mcp",
   title: "小安智能健身官方 MCP",
-  version: "0.2.0-test",
+  version: "0.3.0-test",
   description: "查询小安智能健身服务、创建一对一私教预约并查询预约状态。"
 };
 

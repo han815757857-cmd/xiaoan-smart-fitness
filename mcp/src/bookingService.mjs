@@ -23,7 +23,21 @@ function isFeishuStore() {
   return process.env.XIAOAN_STORE === "feishu";
 }
 
+function isExplicitMockStore() {
+  return process.env.XIAOAN_STORE === "local" && process.env.XIAOAN_ALLOW_MOCK === "true";
+}
+
+function assertConfiguredStore() {
+  if (isFeishuStore() || isExplicitMockStore()) return;
+  const error = new Error(
+    "真实订单存储未配置，预约未创建。生产环境请设置 XIAOAN_STORE=feishu；仅本地测试可同时设置 XIAOAN_STORE=local 和 XIAOAN_ALLOW_MOCK=true。"
+  );
+  error.code = "ORDER_STORE_NOT_CONFIGURED";
+  throw error;
+}
+
 async function loadBookings() {
+  assertConfiguredStore();
   return isFeishuStore() ? readFeishuBookings() : readBookings();
 }
 
@@ -186,7 +200,7 @@ export async function createBooking(input) {
     booking: publicBooking(booking),
     message: isFeishuStore()
       ? "预约已创建，并已写入飞书多维表格。"
-      : "预约已创建。本地骨架阶段暂写入 mock 存储，设置 XIAOAN_STORE=feishu 后可写入飞书。"
+      : "仅本地测试：已写入 mock 存储，不是真实商家预约。"
   };
 }
 

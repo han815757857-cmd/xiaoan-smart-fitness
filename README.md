@@ -2,6 +2,7 @@
 
 小安智能健身官方 Agent 接入仓库，包含两部分：
 
+- 根目录 `SKILL.md` + `skill.json` + `scripts/mcp-client.js`：面向 Agent 安装的正式入口，固定调用商家远程 MCP。
 - `skills/xiaoan-smart-fitness/`：帮助个人 Agent 发现、理解并正确沟通服务。
 - `mcp/`：查询服务、创建预约和查询订单的 MCP 服务端。
 
@@ -13,6 +14,7 @@
 - 创建预约前必须获得用户明确确认。
 - 飞书应用密钥和 MCP 访问令牌只保存在服务器 `.env`，不得提交到 GitHub。
 - 完整手机号、健康风险说明和商家备注不通过查单接口对外返回。
+- 未配置真实飞书存储时，创建预约会直接失败；只有同时显式设置 `XIAOAN_STORE=local` 和 `XIAOAN_ALLOW_MOCK=true` 才允许本地 mock 测试。
 
 ## MCP 本地验收
 

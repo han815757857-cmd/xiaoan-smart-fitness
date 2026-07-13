@@ -9,7 +9,11 @@ const root = join(__dirname, "..");
 const child = spawn("node", ["src/server.mjs"], {
   cwd: root,
   stdio: ["pipe", "pipe", "pipe"],
-  env: process.env
+  env: {
+    ...process.env,
+    XIAOAN_STORE: process.env.XIAOAN_STORE || "local",
+    XIAOAN_ALLOW_MOCK: process.env.XIAOAN_STORE === "feishu" ? "false" : "true"
+  }
 });
 
 child.stderr.on("data", (chunk) => {
@@ -113,7 +117,7 @@ if (!queried.ok || queried.booking.booking_id !== created.booking.booking_id) {
 }
 
 console.log(JSON.stringify({
-  store: process.env.XIAOAN_STORE || "local",
+  store: process.env.XIAOAN_STORE || "local-explicit-test-only",
   created_booking: created.booking.booking_id,
   repeated_returned_same_booking: repeated.booking.booking_id === created.booking.booking_id,
   conflict_code: conflict.code,

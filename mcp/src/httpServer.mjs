@@ -96,7 +96,7 @@ const server = createServer(async (req, res) => {
       ok: true,
       service: SERVER_INFO.name,
       version: SERVER_INFO.version,
-      store: process.env.XIAOAN_STORE || "local"
+      store: process.env.XIAOAN_STORE || "unconfigured"
     });
     return;
   }

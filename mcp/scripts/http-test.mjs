@@ -17,7 +17,8 @@ const child = spawn("node", ["src/httpServer.mjs"], {
     HOST: "127.0.0.1",
     PORT: String(port),
     MCP_AUTH_TOKEN: token,
-    XIAOAN_STORE: "local"
+    XIAOAN_STORE: "local",
+    XIAOAN_ALLOW_MOCK: "true"
   }
 });
 
