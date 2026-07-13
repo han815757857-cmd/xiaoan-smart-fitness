@@ -33,3 +33,14 @@ docker compose up -d --build
 ```
 
 容器只绑定服务器本机 `127.0.0.1:3000`；公网访问必须通过带有效证书的 HTTPS 反向代理。
+
+如果服务器无法访问 Docker Hub，可直接使用服务器自带的 Node.js 22 和用户级 systemd：
+
+```bash
+mkdir -p ~/.config/systemd/user mcp/data
+cp mcp/deploy/xiaoan-mcp.service ~/.config/systemd/user/
+systemctl --user daemon-reload
+systemctl --user enable --now xiaoan-mcp
+```
+
+服务文件强制监听 `127.0.0.1:3000`，并设置自动重启；启用用户 linger 后可在服务器重启后自动运行。

@@ -1,0 +1,22 @@
+[Unit]
+Description=Xiaoan Smart Fitness MCP
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=%h/xiaoan-smart-fitness/mcp
+EnvironmentFile=%h/xiaoan-smart-fitness/mcp/.env
+Environment=HOST=127.0.0.1
+Environment=PORT=3000
+ExecStart=/usr/bin/node src/httpServer.mjs
+Restart=always
+RestartSec=5
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ProtectHome=read-only
+ReadWritePaths=%h/xiaoan-smart-fitness/mcp/data
+
+[Install]
+WantedBy=default.target
