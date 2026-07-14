@@ -1,49 +1,86 @@
-# 小安智能健身 MCP 安装指南
+# 小安智能健身 MCP 接入指南
 
-## 给朋友的安装步骤
+**任何 AI Agent 都可以连接到小安智能健身 MCP 服务，实现自然语言预约健身私教。**
 
-### 第一步：安装 Claude Desktop
+---
 
-如果还没有安装，请访问 [Claude Desktop 官网](https://claude.ai/download) 下载。
+## 🚀 快速接入（3种方式）
 
-### 第二步：安装小安智能健身 Skill
+### 方式一：Claude Desktop（推荐，最简单）
 
-在 Claude Desktop 中输入：
+1. 安装 [Claude Desktop](https://claude.ai/download)
+2. 在对话中输入：
+   ```
+   /install https://github.com/han815757857-cmd/xiaoan-smart-fitness
+   ```
+3. 开始使用：
+   ```
+   帮我预约小安健身，明天下午3点
+   ```
 
+### 方式二：通用 MCP 客户端
+
+**服务器配置：**
+```json
+{
+  "mcpServers": {
+    "xiaoan-smart-fitness": {
+      "transport": "streamable-http",
+      "url": "http://39.108.49.182:3001/mcp",
+      "headers": {
+        "Authorization": "Bearer xiaoan-mcp-2026-secure-token-7d4f9a2b"
+      }
+    }
+  }
+}
 ```
-/install https://github.com/han815757857-cmd/xiaoan-smart-fitness
-```
 
-### 第三步：配置授权（重要！）
+**支持的工具：**
+- `list_services` - 查询服务目录
+- `create_booking` - 创建预约
+- `get_booking` - 查询预约状态
 
-MCP 服务需要授权才能访问。请联系管理员获取授权 token。
+### 方式三：直接 HTTP 调用
 
-收到 token 后，创建配置文件：
+**示例：创建预约**
 
-**Mac/Linux:**
 ```bash
-mkdir -p ~/.xiaoan
-echo '{"token": "你的token"}' > ~/.xiaoan/mcp-auth.json
+curl -X POST http://39.108.49.182:3001/mcp \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer xiaoan-mcp-2026-secure-token-7d4f9a2b" \
+  -d '{
+    "jsonrpc": "2.0",
+    "id": 1,
+    "method": "tools/call",
+    "params": {
+      "name": "create_booking",
+      "arguments": {
+        "idempotency_key": "unique-key-123",
+        "service_id": "xiaoan-pt-60",
+        "customer_name": "张三",
+        "customer_phone": "13800138000",
+        "requested_date": "2026-07-20",
+        "requested_time_slot": "15:00-16:00",
+        "fitness_goal": "减脂塑形",
+        "health_risk": "none",
+        "user_confirmed": true
+      }
+    }
+  }'
 ```
 
-**Windows:**
-```powershell
-New-Item -ItemType Directory -Force -Path "$env:USERPROFILE\.xiaoan"
-'{"token": "你的token"}' | Out-File -FilePath "$env:USERPROFILE\.xiaoan\mcp-auth.json" -Encoding UTF8
-```
-
-### 第四步：开始使用
-
-在 Claude 中说：
-
-```
-帮我预约小安健身，明天下午3点
-```
-
-或者：
-
-```
-查询小安健身有什么服务
+**返回示例：**
+```json
+{
+  "jsonrpc": "2.0",
+  "id": 1,
+  "result": {
+    "content": [{
+      "type": "text",
+      "text": "{\"ok\": true, \"booking\": {\"booking_id\": \"XA-20260720-0001\", ...}}"
+    }]
+  }
+}
 ```
 
 ---
