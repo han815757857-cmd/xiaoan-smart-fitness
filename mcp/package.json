@@ -11,6 +11,7 @@
     "m3-5:test": "node scripts/m3-5-test.mjs",
     "http:test": "node scripts/http-test.mjs",
     "store:safety:test": "node scripts/store-safety-test.mjs",
+    "stdio:proxy:test": "node scripts/stdio-proxy-test.mjs",
     "feishu:openapi:test": "node scripts/feishu-openapi-test.mjs"
   },
   "engines": {

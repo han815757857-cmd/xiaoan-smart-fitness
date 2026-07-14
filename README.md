@@ -19,6 +19,22 @@ node ~/xiaoan-smart-fitness/scripts/mcp-client.js list
 
 授权保存在当前用户的 `~/.xiaoan/mcp-auth.json`，文件权限为 `600`；不得提交到 GitHub。
 
+### OpenClaw 2026.3.x 兼容
+
+OpenClaw 2026.3.x 可保存 HTTP MCP 配置，但部分版本只向 Agent 投射 stdio MCP。仓库提供 `scripts/mcp-stdio-proxy.js` 作为宿主机兼容桥：
+
+- OpenClaw 仅启动该 stdio 进程；
+- 兼容桥只访问本机 `http://127.0.0.1:3000/mcp`；
+- Token 仅从商家服务器 `mcp/.env` 读取，不进入 Agent 沙箱和 OpenClaw 配置；
+- 订单仍由同一个云端 MCP 写入飞书，不使用 mock。
+
+兼容桥回归测试：
+
+```bash
+cd mcp
+npm run stdio:proxy:test
+```
+
 ## 安全边界
 
 - MCP 不收集银行卡信息，也不代替支付。

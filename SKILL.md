@@ -19,6 +19,7 @@ keywords:
 
 - 仓库根目录 `skill.json` 是远程 MCP 地址和工具清单的唯一发布入口。
 - 宿主已注册小安原生 MCP 工具时直接使用；否则运行随包固定客户端 `node <skill_dir>/scripts/mcp-client.js`。
+- OpenClaw 2026.3.x 宿主可由商家管理员注册 `scripts/mcp-stdio-proxy.js` 兼容桥；该桥由宿主运行并仅转发到本机正式 MCP，不是 Agent 本地 mock。
 - **禁止克隆并启动 `mcp/src/server.mjs` 代替远程商家 MCP**；禁止把本地 mock 记录称为真实预约。
 - 客户端返回 `MCP_AUTH_REQUIRED`、超时、网络错误或工具失败时，必须明确告知用户“预约未创建”，不得生成订单号。
 - 每次选择工具或参数前先运行 `node <skill_dir>/scripts/mcp-client.js list`，再用 `call`。
