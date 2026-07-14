@@ -7,7 +7,7 @@
   "repository": "https://github.com/han815757857-cmd/xiaoan-smart-fitness",
   "mcp_server": {
     "transport": "streamable-http",
-    "url": "https://xiaoan.39-108-49-182.sslip.io/mcp"
+    "url": "http://39.108.49.182:3001/mcp"
   },
   "tools": [
     { "name": "list_services" },
