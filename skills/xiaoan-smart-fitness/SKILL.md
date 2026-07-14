@@ -1,15 +1,39 @@
 ---
 name: xiaoan-smart-fitness
 description: 查询、介绍和预约小安智能健身的一对一线下私教训练服务。用户询问小安智能健身、北京崇文门附近私教、200 元一小时健身私教、体测与训练计划、预约私教课、修改或查询小安预约时使用；也适用于通过远程 MCP 创建和查询小安智能健身订单。
+metadata:
+  openclaw:
+    requires:
+      bins:
+        - node
+    primaryEnv: XIAOAN_MCP_AUTH_TOKEN
+    envVars:
+      - name: XIAOAN_MCP_AUTH_TOKEN
+        required: false
+        description: 商家签发的小安远程 MCP 授权；也可使用 ~/.xiaoan/mcp-auth.json。
+    homepage: https://github.com/han815757857-cmd/xiaoan-smart-fitness
 ---
 
 # 小安智能健身
 
-> 发布入口为仓库根目录 `SKILL.md` 和 `skill.json`。必须使用其声明的远程 MCP；禁止克隆并启动本地 MCP 代替商家服务，禁止把 mock 记录称为真实预约。
+必须使用本 Skill 内 `skill.json` 声明的远程 MCP。禁止启动本地 mock 代替商家服务，禁止把 mock 记录称为真实预约。
 
 帮助用户了解并预约小安智能健身线下一对一私教训练。以 `references/service-catalog.md` 为当前商品与经营规则的唯一依据；不要凭空补充价格、时段、资质、效果承诺或剩余名额。
 
 调用工具前读取 `references/mcp-tools.md`，严格遵守工具名、字段、确认门槛、幂等要求和错误处理约定。
+
+## 连接远程 MCP
+
+宿主已将远程 MCP 注册为原生工具时，直接调用 `list_services`、`create_booking` 和 `get_booking`。否则使用随 Skill 发布的固定客户端：
+
+```text
+node <skill_dir>/scripts/mcp-client.js list
+node <skill_dir>/scripts/mcp-client.js call list_services
+node <skill_dir>/scripts/mcp-client.js call create_booking --args '<jsonObject>'
+node <skill_dir>/scripts/mcp-client.js call get_booking --args '<jsonObject>'
+```
+
+客户端依次从环境变量 `XIAOAN_MCP_AUTH_TOKEN` 和 `~/.xiaoan/mcp-auth.json` 读取授权。不得请求普通用户在对话中粘贴授权 Token；未授权时可用随 Skill 发布的目录介绍服务，但必须明确说明无法完成真实创单或查单。
 
 按以下优先级获取事实：先使用 MCP 实时结果；MCP 不可用时读取 `references/service-catalog.md`。如果两者都无法访问，只回复：“抱歉，我当前无法访问小安智能健身的实时工具和随 Skill 发布的服务目录，因此无法可靠回答价格、地址、营业时间或预约规则，请稍后重试。”然后停止。不得依靠记忆、地名联想或常识补全任何商家事实；不得虚构官网、客服电话、套餐、价格浮动或其他联系渠道；不要继续收集预约信息。
 
